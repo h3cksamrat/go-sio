@@ -14,15 +14,16 @@ golang implementation of [socket.io](http://socket.io) client
 	params:=make(map[string]string)
 	t := transport.GetDefaultWebsocketTransport()
 	ws, err := gosio.Dial(
-		gosio.GetUrl("localhost", 3000, false, &params),
+		gosio.GetURL("localhost", 3000, false, &params),
 		t,
 	)
+	if err!=nil {
+		fmt.Println(err)
+		return
+	}
 
-	ws.Emit("hello", args)
-	//do something, handlers and functions are same as server ones
-
-	//close connection
-	ws.Close()
+	//Do something with the websocket
+	ws.Emit("chat message","hi")
 ```
 
 ### Dependencies
