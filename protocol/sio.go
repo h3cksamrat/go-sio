@@ -47,7 +47,7 @@ func typeToText(msgType int) (string, error) {
 	return "", errorUnknownMessageType
 }
 
-//Encode - Convert a message into a string for the wire
+// Encode - Convert a message into a string for the wire
 func Encode(m *Message) (string, error) {
 	mtype, err := typeToText(m.Type)
 	if err != nil {
@@ -61,7 +61,7 @@ func Encode(m *Message) (string, error) {
 		mtype += strconv.Itoa(m.AckID)
 	case MessageTypeAckResponse:
 		return mtype + strconv.Itoa(m.AckID) + "[" + m.Args + "]", nil
-	case MessageTypeOpen,MessageTypeClose:
+	case MessageTypeOpen, MessageTypeClose:
 		return mtype + m.Args, nil
 	}
 
@@ -73,7 +73,7 @@ func Encode(m *Message) (string, error) {
 	return mtype + "[" + string(jsonMethod) + "," + m.Args + "]", nil
 }
 
-//MustEncode - Encode or panic
+// MustEncode - Encode or panic
 func MustEncode(m *Message) string {
 	result, err := Encode(m)
 	if err != nil {
@@ -112,7 +112,8 @@ func getMessageType(data string) (int, error) {
 	return 0, errorUnknownMessageType
 }
 
-/**
+/*
+*
 Get ack id of current packet, if present
 */
 func getAck(text string) (AckID int, restText string, err error) {
@@ -134,12 +135,25 @@ func getAck(text string) (AckID int, restText string, err error) {
 	return ack, text[pos:], nil
 }
 
-/**
+/*
+*
 Get message method of current packet, if present
 */
 func getMethod(text string) (method, restText string, err error) {
+	// var args []string
+
+	// err = json.Unmarshal([]byte(text), &args)
+	// if err != nil {
+	// 	return "", "", err
+	// }
+	// if len(args) < 2 {
+	// 	return "", "", errorWrongPacket
+	// }
+
+	// return args[0], args[1], err
 	var start, end, rest, countQuote int
 
+	text = strings.TrimSpace(text)
 	for i, c := range text {
 		if c == '"' {
 			switch countQuote {
@@ -169,10 +183,10 @@ func getMethod(text string) (method, restText string, err error) {
 	return text[start:end], text[rest : len(text)-1], nil
 }
 
-//Decode - take a message from the wire and convert it back into the Message struct
+// Decode - take a message from the wire and convert it back into the Message struct
 func Decode(data string) (*Message, error) {
 	var err error
-	m := &Message{Source:data}
+	m := &Message{Source: data}
 
 	m.Type, err = getMessageType(data)
 	if err != nil {
@@ -184,7 +198,7 @@ func Decode(data string) (*Message, error) {
 		m.Args = data[1:]
 		return m, nil
 	case MessageTypeClose, MessageTypePing, MessageTypePong, MessageTypeEmpty:
-		return m,nil
+		return m, nil
 	}
 
 	ack, rest, err := getAck(data)
