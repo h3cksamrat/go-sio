@@ -140,19 +140,7 @@ func getAck(text string) (AckID int, restText string, err error) {
 Get message method of current packet, if present
 */
 func getMethod(text string) (method, restText string, err error) {
-	// var args []string
-
-	// err = json.Unmarshal([]byte(text), &args)
-	// if err != nil {
-	// 	return "", "", err
-	// }
-	// if len(args) < 2 {
-	// 	return "", "", errorWrongPacket
-	// }
-
-	// return args[0], args[1], err
 	var start, end, rest, countQuote int
-
 	text = strings.TrimSpace(text)
 	for i, c := range text {
 		if c == '"' {
