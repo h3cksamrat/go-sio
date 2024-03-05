@@ -1,4 +1,4 @@
-module github.com/gnabgib/go-sio
+module github.com/h3cksamrat/go-sio
 
 go 1.14
 
